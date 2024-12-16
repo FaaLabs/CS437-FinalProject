@@ -1,7 +1,7 @@
 import socket
 import json
 
-HOST = "192.168.1.89"  # IP address of server
+HOST = "192.168.1.65"  # IP address of server
 PORT = 65432  # Port to listen
 
 

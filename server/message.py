@@ -25,7 +25,7 @@ def client_send_message(message):
     client.messages.create(
         body=message, from_=FROM_WHATSAPP_NUMBER, to=TO_WHATSAPP_NUMBER
     )
-    print("Message successfully sent...")
+    print("Message successfully sent.")
 
 
 def send_whatsapp_notification(list_events):
@@ -35,7 +35,9 @@ def send_whatsapp_notification(list_events):
     for event in list_events:
         timestamp = datetime.strptime(event.get("timestamp"), date_format)
         location = event.get("location")
-        message += f"* {timestamp.strftime(HOURS_FORMAT)} - {location} \n"
+
+        if location:
+            message += f"* {timestamp.strftime(HOURS_FORMAT)} - {location} \n"
     client_send_message(message)
 
 
