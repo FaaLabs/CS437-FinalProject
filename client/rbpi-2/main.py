@@ -59,20 +59,6 @@ detection_classes = detection_graph.get_tensor_by_name("detection_classes:0")
 # Number of objects detected
 num_detections = detection_graph.get_tensor_by_name("num_detections:0")
 
-# Initialize frame rate calculation
-frame_rate_calc = 1
-freq = cv2.getTickFrequency()
-font = cv2.FONT_HERSHEY_SIMPLEX
-
-# Initialize Picam feed
-cam = Picamera2()
-cam.configure(
-    cam.create_video_configuration(
-        main={"format": "RGB888", "size": (IM_WIDTH, IM_HEIGHT)}
-    )
-)
-cam.start()
-
 # Define places coordinates
 TL_studio = (10, 10)
 BR_studio = (150, int(IM_HEIGHT - 5))
@@ -137,6 +123,21 @@ def cat_detection(frame):
 
     return frame, is_detected, place_detected
 
+
+# Initialize frame rate calculation
+frame_rate_calc = 1
+freq = cv2.getTickFrequency()
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+# Initialize Picam feed
+cam = Picamera2()
+cam.configure(
+    cam.create_video_configuration(
+        main={"format": "RGB888", "size": (IM_WIDTH, IM_HEIGHT)},
+        controls={"FrameDurationLimits": (200000, 200000)},
+    )
+)
+cam.start()
 
 detection_counter = 0
 last_seen_at = datetime.now()
@@ -204,6 +205,5 @@ while True:
 
         detection_counter = 0
 
-
-cam.release()
+cam.close()
 cv2.destroyAllWindows()
