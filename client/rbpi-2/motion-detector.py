@@ -3,6 +3,7 @@ from picamera2 import Picamera2
 from datetime import datetime
 from socket_client import send_event_to_server
 
+
 def detect_motion(place_detected):
     picam2 = Picamera2()
     picam2.configure(picam2.create_preview_configuration(main={"size": (640, 480)}))
@@ -15,7 +16,7 @@ def detect_motion(place_detected):
     try:
         while True:
             frame = picam2.capture_array()
-            # Convert the frame to grayscale 
+            # Convert the frame to grayscale
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             gray_frame = cv2.GaussianBlur(
                 gray_frame, (21, 21), 0
@@ -42,8 +43,8 @@ def detect_motion(place_detected):
                     continue
                 (x, y, w, h) = cv2.boundingRect(contour)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                print("Motion detected!")
-                
+                detection_counter += 1
+
                 # If detection happens for more than 10 frames
                 if detection_counter > 10:
                     print("Adding detection event")
@@ -74,5 +75,6 @@ def detect_motion(place_detected):
     finally:
         picam2.stop()
         cv2.destroyAllWindows()
+
 
 detect_motion("2nd floor")
