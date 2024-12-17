@@ -108,7 +108,7 @@ def cat_detection(frame):
 
         # Draw a circle at center of object
         cv2.circle(frame, (x, y), 5, (75, 13, 180), -1)
-        place_detected = "2nd floor"
+        place_detected = "1st floor"
         print(f"Coordinates: {x}, {y}")
 
         # Detect place
@@ -118,7 +118,7 @@ def cat_detection(frame):
             and (y > TL_studio[1])
             and (y < BR_studio[1])
         ):
-            place_detected = "Studio"
+            place_detected = "Kitchen"
 
         if (
             (x > BR_bedroom[0])
@@ -126,7 +126,7 @@ def cat_detection(frame):
             and (y > TL_bedroom[1])
             and (y < BR_bedroom[1])
         ):
-            place_detected = "Bedroom"
+            place_detected = "Sofa"
 
         is_detected = True
 
@@ -162,13 +162,13 @@ while True:
 
     # Draw places rectangles
     cv2.rectangle(frame, TL_studio, BR_studio, (255, 20, 20), 3)
-    cv2.putText(frame, "Studio", (12, 50), font, 1, (255, 20, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "Kitchen", (12, 50), font, 1, (255, 20, 255), 2, cv2.LINE_AA)
 
     cv2.rectangle(frame, TL_bedroom, BR_bedroom, (20, 20, 255), 3)
-    cv2.putText(frame, "Bedroom", (502, 50), font, 1, (20, 255, 255), 3, cv2.LINE_AA)
+    cv2.putText(frame, "Sofa", (502, 50), font, 1, (20, 255, 255), 3, cv2.LINE_AA)
 
     # All the results have been drawn on the frame, so it's time to display it.
-    cv2.imshow("Object detector", frame)
+    cv2.imshow("Cat detection", frame)
 
     t2 = cv2.getTickCount()
     time1 = (t2 - t1) / freq
