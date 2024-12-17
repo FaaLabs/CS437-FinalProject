@@ -71,12 +71,15 @@ BR_bedroom = (500, int(IM_HEIGHT - 5))
 def cat_detection(frame):
     is_detected = False
     place_detected = None
-    frame_expanded = np.expand_dims(frame, axis=0)
+    
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    input_tensor = tf.convert_to_tensor(frame)
+    input_tensor = input_tensor[tf.newaxis, ...]  # Add batch dimension
 
     # Perform the actual detection by running the model with the image as input
-    (boxes, scores, classes, num) = sess.run(
+    (boxes, scores, classes, _) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
-        feed_dict={image_tensor: frame_expanded},
+        feed_dict={image_tensor: input_tensor},
     )
 
     # Draw the results of the detection (aka 'visulaize the results')
@@ -132,8 +135,8 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 # Initialize Picam feed
 cam = Picamera2()
 cam.configure(
-    cam.create_video_configuration(
-        main={"format": "RGB888", "size": (IM_WIDTH, IM_HEIGHT)},
+    cam.create_preview_configuration(
+        main={"size": (IM_WIDTH, IM_HEIGHT)},
         controls={"FrameDurationLimits": (200000, 200000)},
     )
 )
