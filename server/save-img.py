@@ -30,7 +30,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 img_data += packet
 
             # Step 3: Save the received image
-            save_image(f"images/{str(datetime.now())}", img_data)
+            save_image(f"images/{str(datetime.now())}.jpg", img_data)
 
     except SystemError:
         print("Closing socket")

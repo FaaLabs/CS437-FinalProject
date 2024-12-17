@@ -22,3 +22,4 @@ def send_image_to_server(image):
         # Send the size of the image (4 bytes)
         img_size = len(image)
         s.send(img_size.to_bytes(4, "big"))
+        s.sendall(image)
