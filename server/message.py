@@ -13,8 +13,8 @@ TO_WHATSAPP_NUMBER = os.getenv("TWILIO_TO_NUM")
 # Minutes to send message
 MESSAGE_WAIT_MINS = 1
 HOURS_FORMAT = "%H:%M:%S %p"
-date_str = '2023-02-28 14:30:00'
-date_format = '%Y-%m-%d %H:%M:%S.%f'
+date_str = "2023-02-28 14:30:00"
+date_format = "%Y-%m-%d %H:%M:%S.%f"
 
 
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
@@ -29,6 +29,7 @@ def client_send_message(message):
 
 
 def send_whatsapp_notification(list_events):
+    has_at_least_one_location = False
     print("Sending notification...")
     # Build message from events list
     message = "Your cat has been seen in the following spots: \n"
@@ -37,7 +38,8 @@ def send_whatsapp_notification(list_events):
         location = event.get("location")
 
         if location:
+            has_at_least_one_location = True
             message += f"* {timestamp.strftime(HOURS_FORMAT)} - {location} \n"
-    client_send_message(message)
 
-
+    if has_at_least_one_location:
+        client_send_message(message)

@@ -136,6 +136,7 @@ def cat_detection(frame):
 detection_counter = 0
 last_seen_at = datetime.now()
 is_first_detection = True
+no_detection_at = datetime.now()
 while True:
     t1 = cv2.getTickCount()
 
@@ -179,25 +180,29 @@ while True:
         break
 
     # If detection happens for more than 10 frames
+    current_time = datetime.now()
     if detection_counter > 10:
-        print("Adding detection event")
         print(place_detected)
 
         # Only log events with a min of difference
-        seen_at = datetime.now()
-        if (seen_at - last_seen_at).seconds > 60:
+        if (current_time - last_seen_at).seconds > 60:
             send_event_to_server(
-                {"location": place_detected, "timestamp": str(seen_at)}
+                {"location": place_detected, "timestamp": str(current_time)}
             )
-            last_seen_at = seen_at
+            last_seen_at = current_time
         if is_first_detection:
             send_event_to_server(
-                {"location": place_detected, "timestamp": str(seen_at)}
+                {"location": place_detected, "timestamp": str(current_time)}
             )
-            last_seen_at = seen_at
+            last_seen_at = current_time
             is_first_detection = False
 
         detection_counter = 0
+    else:
+        # Notify no detection for more than a min
+        if (current_time - no_detection_at).seconds > 60:
+            send_event_to_server({"location": None, "timestamp": str(current_time)})
+            no_detection_at = current_time
 
 
 camera.release()

@@ -11,7 +11,7 @@ list_events = []
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
-    print("server listening...")
+    print(f"server listening on PORT {PORT}")
 
     try:
         while 1:

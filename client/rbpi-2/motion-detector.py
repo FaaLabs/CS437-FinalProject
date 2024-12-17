@@ -1,7 +1,16 @@
 import cv2
 from picamera2 import Picamera2
 from datetime import datetime
-from socket_client import send_event_to_server
+from socket_client import send_event_to_server, send_image_to_server
+
+
+def encode_and_send_image(frame):
+    # Encode the image as a JPEG
+    _, img_encoded = cv2.imencode(".jpg", frame)
+
+    # Convert the encoded image to a byte array
+    img_bytes = img_encoded.tobytes()
+    send_image_to_server(img_bytes)
 
 
 def detect_motion(place_detected):
@@ -47,7 +56,6 @@ def detect_motion(place_detected):
 
                 # If detection happens for more than 10 frames
                 if detection_counter > 10:
-                    print("Adding detection event")
                     print(place_detected)
 
                     # Only log events with a min of difference
@@ -56,11 +64,13 @@ def detect_motion(place_detected):
                         send_event_to_server(
                             {"location": place_detected, "timestamp": str(seen_at)}
                         )
+                        encode_and_send_image(frame)
                         last_seen_at = seen_at
                     if is_first_detection:
                         send_event_to_server(
                             {"location": place_detected, "timestamp": str(seen_at)}
                         )
+                        encode_and_send_image(frame)
                         last_seen_at = seen_at
                         is_first_detection = False
 
