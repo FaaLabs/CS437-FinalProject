@@ -73,13 +73,13 @@ def cat_detection(frame):
     place_detected = None
     
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    input_tensor = tf.convert_to_tensor(frame)
-    input_tensor = input_tensor[tf.newaxis, ...]  # Add batch dimension
+    input_data = cv2.resize(frame, (640, 480))  # Resize to model's input size
+    input_data = np.expand_dims(input_data, axis=0)  # Add batch dimension
 
     # Perform the actual detection by running the model with the image as input
     (boxes, scores, classes, _) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
-        feed_dict={image_tensor: input_tensor},
+        feed_dict={image_tensor: input_data},
     )
 
     # Draw the results of the detection (aka 'visulaize the results')
